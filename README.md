@@ -16,12 +16,15 @@ Giphy is an animated [GIF](http://en.wikipedia.org/wiki/Graphics_Interchange_For
 
 The [Giphy API](http://api.giphy.com) provides the following JSON endpoints:
 
-+ search
++ Recent
++ Translate
++ Search
++ Artists
 + GIF by id
 + GIFs by id
-+ translate
-+ random 
-+ trending
++ Random
++ Trending
++ GIFs by username
 
 The search endpoint replicates the search found on [Giphy](http://giphy.com). Translate is an experimental endpoint designed to be used for GIF dialects and random returns a single random GIF, optionally limited to a specified tag. Learn more about the rest in the documentation below.
 
@@ -34,6 +37,130 @@ The Giphy API implements a REST-like interface. Connections can be made with any
 ###### Parameters
 
 + api_key - The public beta key is "dc6zaTOxFJmzC"
+
+### Recent GIFs Endpoint
+
+Fetch most recent gifs, optionally limited by tag. Returns 10 results. Additional GIF size data can be looked up by using the get GIF by id.
+
+    http://api.giphy.com/v1/gifs/recent?api_key=dc6zaTOxFJmzC
+
+[Example](http://api.giphy.com/v1/gifs/recent?api_key=dc6zaTOxFJmzC) recent GIFs query.
+[Example](http://api.giphy.com/v1/gifs/recent?api_key=dc6zaTOxFJmzC&tag=ryan+gosling) recent GIFs by ryan gosling tag query.
+
+###### Path
+
+    /v1/gifs/recent
+
+###### Parameters
+
++ tag (optional) limits recent GIFs to a specific tag.
++ limit (optional) limits the number of results returned. 
+
+
+###### Sample Response, Recent
+
+    {
+        "data": [
+            {
+                "id": "jJgZWn8Z2z4Bi", 
+                "images": {
+                    "fixed_height": {
+                        "height": "200", 
+                        "url": "http://media.giphy.com/media/jJgZWn8Z2z4Bi/200.gif", 
+                        "width": "220"
+                    }, 
+                    "fixed_height_still": {
+                        "height": "200", 
+                        "url": "http://media.giphy.com/media/jJgZWn8Z2z4Bi/200_s.gif", 
+                        "width": "220"
+                    }, 
+                    "original": {
+                        "height": "260", 
+                        "url": "http://media.giphy.com/media/jJgZWn8Z2z4Bi/giphy.gif", 
+                        "width": "286"
+                    }
+                }, 
+                "type": "gif", 
+                "update_date": "2013-06-19T01:54:14+00:00", 
+                "url": "http://giphy.com/gifs/jJgZWn8Z2z4Bi"
+            }
+        ], 
+        "meta": {
+            "msg": "OK", 
+            "status": 200
+        }
+    }        
+
+### Translate Endpoint
+
+This is prototype endpoint for using Giphy as a translation engine for a GIF dialect.  The translate API draws on search, but uses the Giphy "special sauce" to handle translating from one vocabulary to another. In this case, words to GIFs.
+
+    http://api.giphy.com/v1/gifs/translate?s=superman&api_key=dc6zaTOxFJmzC&limit=1
+
+[Example](http://api.giphy.com/v1/gifs/translate?s=superman&api_key=dc6zaTOxFJmzC&limit=1) translate query.
+
+
+###### Path
+
+    /v1/gifs/translate
+
+###### Parameters
+
++ s - term or phrase to translate into a gif
+
+###### Sample Response, Translate
+
+    {
+        "data": {
+            "bitly_fullscreen_url": "http://gph.is/XH7Sri",
+            "bitly_gif_url": "http://gph.is/XH7V6j",
+            "bitly_tiled_url": "http://gph.is/XH7Srk",
+            "id": "3avUsGhmckIYE",
+            "images": {
+                "fixed_height": {
+                    "height": "200",
+                    "url": "http://media.giphy.com/media/3avUsGhmckIYE/200.gif",
+                    "width": "289"
+                },
+                "fixed_height_downsampled": {
+                    "height": "200",
+                    "url": "http://media.giphy.com/media/3avUsGhmckIYE/200_d.gif",
+                    "width": "289"
+                },
+                "fixed_height_still": {
+                    "height": "200",
+                    "url": "http://media.giphy.com/media/3avUsGhmckIYE/200_s.gif",
+                    "width": "289"
+                },
+                "fixed_width": {
+                    "height": "138",
+                    "url": "http://media.giphy.com/media/3avUsGhmckIYE/200w.gif",
+                    "width": "200"
+                },
+                "fixed_width_downsampled": {
+                    "height": "138",
+                    "url": "http://media.giphy.com/media/3avUsGhmckIYE/200w_d.gif",
+                    "width": "200"
+                },
+                "fixed_width_still": {
+                    "height": "138",
+                    "url": "http://media.giphy.com/media/3avUsGhmckIYE/200w_s.gif",
+                    "width": "200"
+                },
+                "original": {
+                    "height": "346",
+                    "url": "http://media.giphy.com/media/3avUsGhmckIYE/giphy.gif",
+                    "width": "500"
+                }
+            },
+            "type": "gif",
+            "url": "http://giphy.com/gifs/3avUsGhmckIYE"
+        },
+        "meta": {
+            "msg": "OK",
+            "status": 200
+        }
+    }
 
 
 ## Search Endpoint
@@ -117,6 +244,115 @@ Search all Giphy GIFs for a word or phrase. Punctuation will be stripped and ign
         }
     }
 
+
+### Artists Endpoint
+
+Return a list of Giphy GIF artists, the optional username parameter limits the response to GIFs created
+by artist username. Support pagination via limit and offset parameters.
+
+    http://api.giphy.com/v1/gifs/artists?api_key=dc6zaTOxFJmzC
+
+[Example](http://api.giphy.com/v1/gifs/artists?api_key=dc6zaTOxFJmzC) artist query
+[Example](http://api.giphy.com/v1/gifs/artists?api_key=dc6zaTOxFJmzC&username=mrdiv&limit=1) GIFs by artist, mrdiv
+
+###### Path
+
+    /v1/gifs/artists
+
+###### Parameters
+
++ username (optional) limits response to GIFs created by artist
++ limit (optional) limits the results returned. Max is 100
++ offset (optional) start position in results. Defaults to 0 
+
+###### Sample Response, Artists
+
+    {
+        "data": [
+            {
+                "avatar": "http://media.giphy.com/avatars/mrdiv.gif",
+                "count": 61,
+                "name": "mr. div",
+                "username": "mrdiv",
+                "website": "http://mrdiv.tumblr.com/"
+            }
+            ...
+        ],
+        "meta": {
+            "msg": "OK",
+            "status": 200
+        },
+        "pagination": {
+            "count": 26,
+            "offset": 0,
+            "total_count": 26
+        }
+    }
+
+
+###### Sample Reponse, Artist - mrdiv
+
+    {
+        "data": [
+            {
+                "bitly_fullscreen_url": "http://gph.is/13YkU2A",
+                "bitly_gif_url": "http://gph.is/13YkU2y",
+                "bitly_tiled_url": "http://gph.is/13YkTf4",
+                "embed_url": "http://giphy.com/embed/7rzbxdu0ZEXLy",
+                "id": "7rzbxdu0ZEXLy",
+                "images": {
+                    "fixed_height": {
+                        "height": "200",
+                        "url": "http://media0.giphy.com/media/7rzbxdu0ZEXLy/200.gif",
+                        "width": "200"
+                    },
+                    "fixed_height_downsampled": {
+                        "height": "200",
+                        "url": "http://media0.giphy.com/media/7rzbxdu0ZEXLy/200_d.gif",
+                        "width": "200"
+                    },
+                    "fixed_height_still": {
+                        "height": "200",
+                        "url": "http://media0.giphy.com/media/7rzbxdu0ZEXLy/200_s.gif",
+                        "width": "200"
+                    },
+                    "fixed_width": {
+                        "height": "200",
+                        "url": "http://media0.giphy.com/media/7rzbxdu0ZEXLy/200w.gif",
+                        "width": "200"
+                    },
+                    "fixed_width_downsampled": {
+                        "height": "200",
+                        "url": "http://media0.giphy.com/media/7rzbxdu0ZEXLy/200w_d.gif",
+                        "width": "200"
+                    },
+                    "fixed_width_still": {
+                        "height": "200",
+                        "url": "http://media0.giphy.com/media/7rzbxdu0ZEXLy/200w_s.gif",
+                        "width": "200"
+                    },
+                    "original": {
+                        "frames": "9",
+                        "height": "500",
+                        "size": "1012692",
+                        "url": "http://media0.giphy.com/media/7rzbxdu0ZEXLy/giphy.gif",
+                        "width": "500"
+                    }
+                },
+                "type": "gif",
+                "url": "http://giphy.com/gifs/7rzbxdu0ZEXLy"
+            }
+        ],
+        "meta": {
+            "msg": "OK",
+            "status": 200
+        },
+        "pagination": {
+            "count": 1,
+            "offset": null,
+            "total_count": 61
+        }
+    }
 
 ## Get GIF by ID Endpoint
 
@@ -314,79 +550,6 @@ A multiget version of the get GIF by ID endpoint. In this case the IDs are feqkV
         }
     }
 
-
-## Translate Endpoint
-
-This is prototype endpoint for using Giphy as a translation engine for a GIF dialect.  The translate API draws on search, but uses the Giphy "special sauce" to handle translating from one vocabulary to another. In this case, words and phrases to GIFs.  Use a plus or url encode for phrases.
-
-    http://api.giphy.com/v1/gifs/translate?s=superman&api_key=dc6zaTOxFJmzC&limit=1
-
-[Example](http://api.giphy.com/v1/gifs/translate?s=superman&api_key=dc6zaTOxFJmzC&limit=1) translate query.
-
-
-###### Path
-
-    /v1/gifs/translate
-
-###### Parameters
-
-+ s - term or phrase to translate into a GIF
-
-### Sample Response, Translate
-
-    {
-        "data": {
-            "bitly_fullscreen_url": "http://gph.is/XH7Sri",
-            "bitly_gif_url": "http://gph.is/XH7V6j",
-            "bitly_tiled_url": "http://gph.is/XH7Srk",
-            "id": "3avUsGhmckIYE",
-            "images": {
-                "fixed_height": {
-                    "height": "200",
-                    "url": "http://media.giphy.com/media/3avUsGhmckIYE/200.gif",
-                    "width": "289"
-                },
-                "fixed_height_downsampled": {
-                    "height": "200",
-                    "url": "http://media.giphy.com/media/3avUsGhmckIYE/200_d.gif",
-                    "width": "289"
-                },
-                "fixed_height_still": {
-                    "height": "200",
-                    "url": "http://media.giphy.com/media/3avUsGhmckIYE/200_s.gif",
-                    "width": "289"
-                },
-                "fixed_width": {
-                    "height": "138",
-                    "url": "http://media.giphy.com/media/3avUsGhmckIYE/200w.gif",
-                    "width": "200"
-                },
-                "fixed_width_downsampled": {
-                    "height": "138",
-                    "url": "http://media.giphy.com/media/3avUsGhmckIYE/200w_d.gif",
-                    "width": "200"
-                },
-                "fixed_width_still": {
-                    "height": "138",
-                    "url": "http://media.giphy.com/media/3avUsGhmckIYE/200w_s.gif",
-                    "width": "200"
-                },
-                "original": {
-                    "height": "346",
-                    "url": "http://media.giphy.com/media/3avUsGhmckIYE/giphy.gif",
-                    "width": "500"
-                }
-            },
-            "type": "gif",
-            "url": "http://giphy.com/gifs/3avUsGhmckIYE"
-        },
-        "meta": {
-            "msg": "OK",
-            "status": 200
-        }
-    }
-
-
 ## Random Endpoint
 
 Returns a random GIF, limited by tag. Excluding the tag parameter will return a random GIF from the Giphy catalog.
@@ -500,6 +663,76 @@ Fetch GIFs currently trending online. The data returned mirrors that used to cre
             msg: "OK"
         }
     }
+### Get GIFs by Username Endpoint
+
+Returns meta data about a gif, based on a provided username. In the below example, the username is . 
+
+    http://api.giphy.com/v1/gifs/search/username/trolli?api_key=dc6zaTOxFJmzC
+    
+[Example](http://api.giphy.com/v1/gifs/search/username/trolli?api_key=dc6zaTOxFJmzC) get GIFs by Username
+
+###### Path
+
+    /v1/gifs/search/username/<username>
+
+###### Parameters
+
++ username
+
+### Sample Response, Get GIFs by Username
+
+	data: 
+	{
+		type: "gif",
+		id: "xLeQZifWXC9fW",
+		url: "http://giphy.com/gifs/xLeQZifWXC9fW",
+		bitly_gif_url: "http://gph.is/1hs4Iiy",
+		bitly_url: "http://gph.is/1hs4Iiy",
+		embed_url: "http://giphy.com/embed/xLeQZifWXC9fW",
+		import_datetime: "2014-02-27 14:47:27",
+		username: "trolli",
+		source: "http://www.weirdlyawesome.com/post/77810297675/venus-mouth-trap",
+		rating: "",
+		images: {
+			fixed_height: {
+				url: "http://media0.giphy.com/media/xLeQZifWXC9fW/200.gif",
+				width: "200",
+				height: "200"
+			},
+			fixed_height_still: {
+				url: "http://media0.giphy.com/media/xLeQZifWXC9fW/200_s.gif",
+				width: "200",
+				height: "200"
+			},
+			fixed_height_downsampled: {
+				url: "http://media0.giphy.com/media/xLeQZifWXC9fW/200_d.gif",
+				width: "200",
+				height: "200"
+			},
+			fixed_width: {
+				url: "http://media0.giphy.com/media/xLeQZifWXC9fW/200w.gif",
+				width: "200",
+				height: "200"
+			},
+			fixed_width_still: {
+				url: "http://media0.giphy.com/media/xLeQZifWXC9fW/200w_s.gif",
+				width: "200",
+				height: "200"
+			},
+			fixed_width_downsampled: {
+				url: "http://media0.giphy.com/media/xLeQZifWXC9fW/200w_d.gif",
+				width: "200",
+				height: "200"
+			},
+			original: {
+				url: "http://media.giphy.com/media/xLeQZifWXC9fW/giphy.gif",
+				width: "500",
+				height: "500",
+				size: "283572",
+				frames: "3"
+			}
+		}
+	}
 
 
 ## Code Examples
